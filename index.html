@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Calculator app</title>
+
+  <link rel="stylesheet" href="calculator.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spartan:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+  </style>
+  <!-- ----------------------script tags  the defer makes them not executed until all the web content is loaded-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+  <script src="calcApp.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <div class="label-section">
+        <h3>calc</h3>
+        <div class="theme-section">
+          <label for="" class="theme-identity one">1</label>
+          <label for="" class="theme-identity two">2</label>
+          <label for="" class="theme-identity three">3</label>
+          <div class="theme-select">
+            <label for="#">THEME</label>
+            <div class="active-theme">
+              <div class="theme-ball"></div> 
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="answer">
+        <input type="text" readonly data-upper-output class="upper-output">
+        <input type="text" data-output class="output" readonly>
+      </div>
+    </div>
+    <div class="bottom">
+      <div><button data-number class="white-buttons">7</button></div>
+      <div><button data-number class="white-buttons">8</button></div>
+      <div><button data-number class="white-buttons">9</button></div>
+      <div><button data-del class="del">Del</button></div>
+      <div><button data-number class="white-buttons">4</button></div>
+      <div><button data-number class="white-buttons">5</button></div>
+      <div><button data-number class="white-buttons">6</button></div>
+      <div><button data-operator class="white-buttons">+</button></div>
+      <div><button data-number class="white-buttons">1</button></div>
+      <div><button data-number class="white-buttons">2</button></div>
+      <div><button data-number class="white-buttons">3</button></div>
+      <div><button data-operator class="white-buttons">-</button></div>
+      <div><button data-number class="white-buttons">.</button></div>
+      <div><button data-number class="white-buttons">0</button></div>
+      <div><button data-operator class="white-buttons">/</button></div>
+      <div><button data-operator class="white-buttons">X</button></div>
+      <div class="reset-div"><button data-reset class="reset">Reset</button></div>
+      <div class="equality-div"><button data-equality class="equality">=</button></div> 
+    </div>
+  </div>
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div>
+  
+</body>
+</html>

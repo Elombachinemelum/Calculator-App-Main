@@ -308,6 +308,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     box-sizing: border-box;
 }
 
+.attribution{
+    padding-top: 1%;
+}
+.attribution a:last-child{
+    text-transform: uppercase;
+    text-decoration: none;
+}
 
 /****************************************** Responsive section****************************************************** */
 

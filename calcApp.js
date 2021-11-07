@@ -435,6 +435,7 @@ class Calculator{
     }
 
     compute(operation){  //we click the equality button and it triggers this...
+        if(outputScreenUpper.value === "") return //single value is always equal to the same thing
         if(isNaN(parseFloat(outputScreen.value.slice(-1)))) return; //simply stops compute() from running when you are yet to enter currentOperand
         // console.log(operation + " is..."); for debugging
         // when we click our equality sign we need to be able to take the previous and current numbers and perform the operation

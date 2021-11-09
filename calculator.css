@@ -269,6 +269,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     box-shadow: 0 2px 3px hsl(6, 70%, 34%),
                 0 3px 4px hsl(6, 70%, 60%)
 }
+
+.transform{
+    text-transform: none;
+}
 /* theme 2**************** */
 .equality2{
     background-color:hsl(25, 98%, 40%) ;

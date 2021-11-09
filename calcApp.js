@@ -24,6 +24,20 @@ class Calculator{
         this.previousOperand = previousOperand;
         this.currentOperand = currentOperand;
     }
+    
+    toggleTheme(){
+        if(currentTheme == "1"){
+            document.querySelector(".one").click();
+            currentTheme = 2;
+        }else if(currentTheme == "2"){
+            document.querySelector(".two").click();
+            currentTheme = 3;
+        }else if(currentTheme == "3"){
+            document.querySelector(".three").click();
+            currentTheme = 1;
+        }
+    }
+
     appendNumber(clickedNumber){  //settled
         if(outputScreen.value.includes(".") && clickedNumber === ".") return
             //this just stops the function from running any other line.....
@@ -488,7 +502,8 @@ class Calculator{
         }
         
         outputScreenUpper.value = this.formatDisplay(outputScreenUpper.value)// we format our display..
-        // instead of having  the above line, we instead call the showHistory() on our object once the compute() runs..
+        lastAnswer = outputScreenUpper.value //the formatted gets saved in the lastAnswer. info in this string is never reset.
+        // however it does not store more than one previous answer...
         this.showHistory(history);
         end = true;  // meaning any number that is clicked will reset our imput
         
@@ -536,6 +551,86 @@ class Calculator{
             outputScreen.value = this.formatDisplay(outputScreen.value)// we format our display..
         }
      
+    }
+
+    returnSquareRoot(aString){
+        let notFormattedAString = aString.replace(/,/gi, "");
+        if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){
+            if(isNaN(outputScreen.value.slice(-1)) == false){
+                // so its a number...and we are not chaining operations..
+                this.reset();
+                if(parseFloat(lastAnswer.replace(/,/gi, "")) >= 0){
+                    // ie if its positive
+                    let noneFormat = lastAnswer.replace(/,/gi, "")
+                    return this.formatDisplay(Math.pow(noneFormat, 0.5));
+                }else{
+                    // if it is negative..
+                    // we slice it up and get the squaroot of +ve part..
+                    let noneFormat = lastAnswer.replace(/,/gi, "");
+                    let first = noneFormat.slice(0,1);  //should be "-"
+                    let second = noneFormat.slice(1); // the positive part..
+                    return this.formatDisplay(first + Math.pow(second, 0.5));  //concactenate result and format..
+                }
+            }  
+        }
+        if(notFormattedAString.includes("-") || notFormattedAString.includes("+") || notFormattedAString.includes("/") || notFormattedAString.includes("*")){ //SPECIAL CASES NEED SPECIAL ATTENTION...
+            let first = notFormattedAString.slice(0,1) //keep the first part..
+            let second = notFormattedAString.slice(1); //slice from second charecter till end..
+
+            // we must check that after the first charater there are no more operators. if this is true then the display
+            // must be a single negative number
+            if(second.includes("-") || second.includes("+") || second.includes("/") || second.includes("*")){
+                return aString //we cant have squareroot of an expression.
+            }else{
+                // IF INDEED ITS A SINGLE NEGATIVE NUMBER...
+                // code here will run when the screen contains (-) but nothing else as it would in a negative number...
+                // Math.pow already changes the string to a number hence we dont have to....
+                let finalResult = this.formatDisplay(first + Math.pow(second, 0.5)) // pass in concactenated values in for formatting
+                return finalResult; //we pass only the second none negative part into Math.pow() then we return the formatted result
+            }
+        }else{
+            // code here will run when ever the screen has no operator either empty or filled with positive integers...
+            // in this event we simply want to return the squareroot.
+            // Math.pow already changes the string to a number hence we dont have to....
+            let finalResult = this.formatDisplay(Math.pow(notFormattedAString, 0.5))
+            return finalResult //the formatted value
+        }
+    }
+
+    fetchPreviousAnswer(aPreviousAnswer){
+        if(outputScreen.value === aPreviousAnswer){
+            outputScreen.value = ""; //instead of having to wipe the digits one at a time...
+            return
+        }
+        
+        if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){ //SPECIAL CASES NEED SPECIAL ATTENTION...
+            let second = outputScreen.value.slice(1); //slice from second charecter till end..
+
+            // we must check that after the first charater there are no more operators. if this is true then the display
+            // must be a single negative number
+            if(second.includes("-") || second.includes("+") || second.includes("/") || second.includes("*")){
+                // if the condition is satisfied then we have an expression on the screen...
+                // this means the previous answer is already on the upper screen...
+                if(isNaN(parseFloat(outputScreen.value.slice(-1)))){
+                    // this is to confirm that we are chaining commands... 
+                    // in this case we want to change the value of the screen to display the previous answer..
+                    outputScreen.value = aPreviousAnswer;
+                }
+            }else{
+                if(outputScreen.value.length == "1"){
+                    // IF INDEED ITS A SINGLE NEGATIVE NUMBER...
+                    // code here will run when the screen contains (-) but nothing else...
+                    // in this case we want to append the previous answer to the "-"
+                    outputScreen.value = outputScreen.value + aPreviousAnswer;
+                }
+            } 
+        }else{
+            // code here will run when ever the screen is empty...
+            if(outputScreen.value === ""){
+                // in this case we simply want to change the display value to show the previous answer....
+                outputScreen.value = aPreviousAnswer;
+            }
+        }
     }
 
     showHistory(stringOfChoice){
@@ -589,6 +684,8 @@ class Calculator{
 // some counting variables....
 let history = ""; //for storing operation sequence
 let end = false; // this is false when the compute(); function is not yet run.
+let currentTheme = 2; //by default..when toggle is used it moves to next theme.
+let lastAnswer = ""; // for storing prevoius answer...
 
 // now lets create some glabal variables...............
 const numberButtons = document.querySelectorAll("[data-number]");
@@ -597,8 +694,14 @@ const deleteButton = document.querySelector("[data-del]");
 const resetButton = document.querySelector("[data-reset]");
 const equalityButton = document.querySelector("[data-equality]");
 const outputScreen = document.querySelector("[data-output]");
-const outputScreenUpper = document.querySelector("[data-upper-output]")
+const outputScreenUpper = document.querySelector("[data-upper-output]");
 let buttons = document.querySelectorAll(".white-buttons");  //just the white buttons....
+const squareRootButton = document.querySelector("[data-squareroot]");
+const previousAnswer = document.querySelector("[data-answer]");
+const activeTheme = document.querySelector("[data-active-theme]");
+let resets = document.querySelectorAll(".reset");
+let equals = document.querySelectorAll(".equality");
+
 
 document.querySelector(".one").addEventListener("click", ()=>{
     // we remove theme 2 and three...........
@@ -608,13 +711,22 @@ document.querySelector(".one").addEventListener("click", ()=>{
     document.querySelector(".output").classList.remove("output3", "output2");
     document.querySelector(".bottom").classList.remove("bottom3", "bottom2");
     document.querySelector(".del").classList.remove("del-reset3", "del-reset2");
-    document.querySelector(".reset").classList.remove("del-reset3", "del-reset2");
+    // document.querySelector(".reset").classList.remove("del-reset3", "del-reset2");
     document.querySelector(".upper-output").classList.remove("upper-output3", "upper-output2");
     buttons.forEach(button=>{
         button.classList.remove("white-buttons3", "white-buttons2");
     });
-    document.querySelector(".equality").classList.remove("equality3", "equality2");
+
+    document.querySelectorAll(".equality").forEach(equal=>{
+        equal.classList.remove("equality3", "equality2");
+    })
+
+    resets.forEach(reset=>{
+        reset.classList.remove("del-reset3", "del-reset2");
+    });
+    // document.querySelector(".equality").classList.remove("equality3", "equality2");
     document.querySelector(".label-section").classList.remove("label-section3", "label-section2");
+    currentTheme = 2;
 })
 
 document.querySelector(".two").addEventListener("click", ()=>{
@@ -625,11 +737,20 @@ document.querySelector(".two").addEventListener("click", ()=>{
     $(".output").removeClass("output3").addClass("output2");
     $(".bottom").removeClass("bottom3").addClass("bottom2");
     $(".del").removeClass("del-reset3").addClass("del-reset2");
-    $(".reset").removeClass("del-reset3").addClass("del-reset2");
+    // $(".reset").removeClass("del-reset3").addClass("del-reset2");
     $(".white-buttons").removeClass("white-buttons3").addClass("white-buttons2");
-    $(".equality").removeClass("equality3").addClass("equality2");
+    equals.forEach(equal=>{
+        equal.classList.remove("equality3");
+        equal.classList.add("equality2");
+    });
+    resets.forEach(reset=>{
+        reset.classList.remove("del-reset3");
+        reset.classList.add("del-reset2");
+    });
+    // $(".equality").removeClass("equality3").addClass("equality2");
     $(".label-section").removeClass("label-section3").addClass("label-section2");
     $(".upper-output").removeClass("upper-output3").addClass("upper-output2");
+    currentTheme = 3;
 });
 
 document.querySelector(".three").addEventListener("click", ()=>{
@@ -639,17 +760,29 @@ document.querySelector(".three").addEventListener("click", ()=>{
     $(".output").addClass("output3");
     $(".bottom").addClass("bottom3");
     $(".del").addClass("del-reset3");
-    $(".reset").addClass("del-reset3");
+    // $(".reset").addClass("del-reset3");
     $(".white-buttons").addClass("white-buttons3");
-    $(".equality").addClass("equality3");
+    equals.forEach(equal=>{
+        equal.classList.add("equality3"); //mixing javascript and jquery..not in the same line.
+    });
+    resets.forEach(reset=>{
+        reset.classList.add("del-reset3"); //mixing javascript and jquery..not in the same line..
+    });
+    // $(".equality").addClass("equality3");
     $(".label-section").addClass("label-section3");
     $(".upper-output").addClass("upper-output3");
+    currentTheme = 1;
 });
 
 // ...........................LISTENING ON OUR CONSTANSTS AND CALLING THEIR METHOD...........................  
 
 // we create our calculator object with our constructor.....
 const calculator = new Calculator(outputScreenUpper.value, outputScreen.value);
+
+// lets add event listener to the toggle....
+activeTheme.addEventListener("click", ()=>{
+    calculator.toggleTheme();
+})
 
 // add listeners to all the number buttons.........
 numberButtons.forEach(button=>{
@@ -673,12 +806,22 @@ equalityButton.addEventListener("click", ()=>{
     calculator.compute(calculator.operation);  // calculator.operation is the value of the operator ie the innerTExt of the clicked operator
 });
 
+// add eventlister to squareroot buttons..
+squareRootButton.addEventListener("click", ()=>{
+    outputScreen.value = calculator.returnSquareRoot(outputScreen.value);
+});
+
+// add event listener to the previous answer button.....
+previousAnswer.addEventListener("click", ()=>{
+    calculator.fetchPreviousAnswer(lastAnswer);
+});
 
 // to enable reset button to work..............
 resetButton.addEventListener("click", ()=>{
     calculator.reset();
-})
+});
 
+// add eventListener to  delete button....
 deleteButton.addEventListener("click", ()=>{
     calculator.del(outputScreen.value);
 });

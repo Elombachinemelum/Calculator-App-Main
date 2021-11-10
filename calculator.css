@@ -65,6 +65,7 @@ h3{
 
 .theme-select label{
     margin-right: .8rem;
+    font-size: 0.75rem;
 }
 
 .theme-select .active-theme{
@@ -311,7 +312,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 
 .attribution{
-    padding-top: 1%;
+    padding:6% 0 2%; 
 }
 .attribution a:last-child{
     text-transform: uppercase;
@@ -320,9 +321,36 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 /****************************************** Responsive section****************************************************** */
 
-@media (min-width: 800px) {
+@media (min-width: 550px) and (max-width: 660px){
+    .container{
+        padding: 12% 10%;
+    }
+}
+
+@media (min-width: 660px) and (max-width: 740px){
+    .container{
+        padding: 12% 15%;
+    }
+}
+
+@media (min-width: 740px) and (max-width: 840px){
+    .container{
+        padding: 12% 20%;
+    }
+}
+@media (min-width: 840px) and (max-width: 900px){
+    .container{
+        padding: 10% 25%;
+    }
+}
+
+
+@media (min-width: 900px) {
     body{
         padding:0 7%;
+    }
+    .theme-select label{
+        font-size: 0.8rem;
     }
 
     .container{

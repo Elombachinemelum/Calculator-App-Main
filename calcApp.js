@@ -556,20 +556,22 @@ class Calculator{
     returnSquareRoot(aString){
         let notFormattedAString = aString.replace(/,/gi, "");
         if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){
-            if(isNaN(outputScreen.value.slice(-1)) == false){
-                // so its a number...and we are not chaining operations..
-                this.reset();
-                if(parseFloat(lastAnswer.replace(/,/gi, "")) >= 0){
-                    // ie if its positive
-                    let noneFormat = lastAnswer.replace(/,/gi, "")
-                    return this.formatDisplay(Math.pow(noneFormat, 0.5));
-                }else{
-                    // if it is negative..
-                    // we slice it up and get the squaroot of +ve part..
-                    let noneFormat = lastAnswer.replace(/,/gi, "");
-                    let first = noneFormat.slice(0,1);  //should be "-"
-                    let second = noneFormat.slice(1); // the positive part..
-                    return this.formatDisplay(first + Math.pow(second, 0.5));  //concactenate result and format..
+            if(outputScreenUpper.value != ""){  //very that an answer is actually displayed on screen..
+                if(isNaN(outputScreen.value.slice(-1)) == false){
+                    // so its a number...and we are not chaining operations..
+                    this.reset();
+                    if(parseFloat(lastAnswer.replace(/,/gi, "")) >= 0){
+                        // ie if its positive
+                        let noneFormat = lastAnswer.replace(/,/gi, "")
+                        return this.formatDisplay(Math.pow(noneFormat, 0.5));
+                    }else{
+                        // if it is negative..
+                        // we slice it up and get the square root of +ve part..
+                        let noneFormat = lastAnswer.replace(/,/gi, "");
+                        let first = noneFormat.slice(0,1);  //should be "-"
+                        let second = noneFormat.slice(1); // the positive part..
+                        return this.formatDisplay(first + Math.pow(second, 0.5));  //concactenate result and format..
+                    }
                 }
             }  
         }
@@ -589,7 +591,7 @@ class Calculator{
                 return finalResult; //we pass only the second none negative part into Math.pow() then we return the formatted result
             }
         }else{
-            // code here will run when ever the screen has no operator either empty or filled with positive integers...
+            // code here will run when ever the screen has no operator, either empty or filled with positive integers...
             // in this event we simply want to return the squareroot.
             // Math.pow already changes the string to a number hence we dont have to....
             let finalResult = this.formatDisplay(Math.pow(notFormattedAString, 0.5))
@@ -604,6 +606,16 @@ class Calculator{
         }
         
         if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){ //SPECIAL CASES NEED SPECIAL ATTENTION...
+            // then we have to confirm that the only character on display is operator is "-"
+            if(outputScreen.value.slice(-1) === "-" && outputScreen.value.length == "1"){
+                // if this is true then we just want to also see if the first character in aPreviousAnswer is "-"..
+                if(aPreviousAnswer.slice(0,1) === "-"){
+                    // if so then we simply change the display to show the previews answer..
+                    outputScreen.value = aPreviousAnswer.slice(1);
+                    return //to stop function from checking other rules which may also return true
+                }
+            }
+            // if the above is not the case..
             let second = outputScreen.value.slice(1); //slice from second charecter till end..
 
             // we must check that after the first charater there are no more operators. if this is true then the display

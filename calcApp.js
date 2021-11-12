@@ -556,22 +556,28 @@ class Calculator{
     returnSquareRoot(aString){
         let notFormattedAString = aString.replace(/,/gi, "");
         if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){
-            if(outputScreenUpper.value != ""){  //very that an answer is actually displayed on screen..
+            if(outputScreenUpper.value != ""){  //verify that an answer is actually displayed on screen..
                 if(isNaN(outputScreen.value.slice(-1)) == false){
                     // so its a number...and we are not chaining operations..
-                    this.reset();
-                    if(parseFloat(lastAnswer.replace(/,/gi, "")) >= 0){
-                        // ie if its positive
-                        let noneFormat = lastAnswer.replace(/,/gi, "")
-                        return this.formatDisplay(Math.pow(noneFormat, 0.5));
-                    }else{
-                        // if it is negative..
-                        // we slice it up and get the square root of +ve part..
-                        let noneFormat = lastAnswer.replace(/,/gi, "");
-                        let first = noneFormat.slice(0,1);  //should be "-"
-                        let second = noneFormat.slice(1); // the positive part..
-                        return this.formatDisplay(first + Math.pow(second, 0.5));  //concactenate result and format..
+                    // now we slice from the second character to see if we find any operator...
+                    let second = outputScreen.value.slice(1);
+                    if(second.includes("-") || second.includes("+") || second.includes("/") || second.includes("*")){
+                        // if this returns true then its safe to say we have the answer on display and below is the history.
+                        this.reset();
+                        if(parseFloat(lastAnswer.replace(/,/gi, "")) >= 0){
+                            // ie if its positive
+                            let noneFormat = lastAnswer.replace(/,/gi, "")
+                            return this.formatDisplay(Math.pow(noneFormat, 0.5));
+                        }else{
+                            // if it is negative..
+                            // we slice it up and get the square root of +ve part..
+                            let noneFormat = lastAnswer.replace(/,/gi, "");
+                            let first = noneFormat.slice(0,1);  //should be "-"
+                            let second = noneFormat.slice(1); // the positive part..
+                            return this.formatDisplay(first + Math.pow(second, 0.5));  //concactenate result and format..
+                        }
                     }
+                    
                 }
             }  
         }
@@ -662,7 +668,7 @@ class Calculator{
             let wholeNumberInteger = integerPartOFSomeString.toLocaleString("en", {maximumFractionDigits:0});
             const decimalPartOfSomeString = stringSomeValue.split(".")[1]
             if(isNaN(integerPartOFSomeString)){
-                return someValue
+                return someValue //no formatting needed
             }else{
                 let formatedSomeValue = wholeNumberInteger + "." + decimalPartOfSomeString;
                 return formatedSomeValue;

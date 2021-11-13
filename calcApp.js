@@ -554,6 +554,13 @@ class Calculator{
     }
 
     returnSquareRoot(aString){
+        // astring refers to a string to be converted to number befrore we compute the square root..
+        if(aString.includes(".") && aString.length == "1"){
+            return aString //we dont want to compute square root of "." alone. so we return aString as it is
+            // we cant just write return because we are passing the outputScreen.value to the output of this function
+            // when thr function returns nothing then the outputScreen.value in turn becomes undefined 
+        } 
+
         let notFormattedAString = aString.replace(/,/gi, "");
         if(outputScreen.value.includes("-") || outputScreen.value.includes("+") || outputScreen.value.includes("/") || outputScreen.value.includes("*")){
             if(outputScreenUpper.value != ""){  //verify that an answer is actually displayed on screen..

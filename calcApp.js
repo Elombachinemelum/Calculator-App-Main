@@ -691,6 +691,9 @@ class Calculator{
         }
         
     }
+    updateTime(){
+        return new Date().toLocaleTimeString("en-GB");
+    }
 
     // convertToExponence(baseNumber,power){
     //     // we'd use this to compute the square roots
@@ -726,6 +729,7 @@ const previousAnswer = document.querySelector("[data-answer]");
 const activeTheme = document.querySelector("[data-active-theme]");
 let resets = document.querySelectorAll(".reset");
 let equals = document.querySelectorAll(".equality");
+let timeOutput = document.getElementById("time-display");
 
 
 document.querySelector(".one").addEventListener("click", ()=>{
@@ -803,6 +807,11 @@ document.querySelector(".three").addEventListener("click", ()=>{
 
 // we create our calculator object with our constructor.....
 const calculator = new Calculator(outputScreenUpper.value, outputScreen.value);
+
+setInterval(()=>{
+    timeOutput.innerText = calculator.updateTime();
+},1000)
+
 
 // lets add event listener to the toggle....
 activeTheme.addEventListener("click", ()=>{

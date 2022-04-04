@@ -377,6 +377,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 @media (max-width: 30em) {
     h3{
-        font-size: 0.5rem;
+        font-size: 0.65rem;
     }
 }

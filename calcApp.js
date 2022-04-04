@@ -809,7 +809,7 @@ document.querySelector(".three").addEventListener("click", ()=>{
 const calculator = new Calculator(outputScreenUpper.value, outputScreen.value);
 
 setInterval(()=>{
-    timeOutput.innerText = calculator.updateTime();
+   // timeOutput.innerText = calculator.updateTime();
 },1000)
 
 
